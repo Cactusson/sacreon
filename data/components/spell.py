@@ -125,5 +125,5 @@ class Spell:
 
     def update(self):
         self.hover = self.rect.collidepoint(pg.mouse.get_pos())
-        if not self.active and not self.blocked:
+        if not (self.active or self.blocked):
             self.image = self.hover_image if self.hover else self.idle_image

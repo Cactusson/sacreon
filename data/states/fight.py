@@ -330,7 +330,7 @@ class Fight(state_machine._State):
             return False
         if not self.move_available:
             return False
-        if not self.ai_turn and not self.can_do_action():
+        if not (self.ai_turn or self.can_do_action()):
             return False
         squares = self.board.get_squares_to_move(self.active_body)
         return True if squares else False
@@ -338,7 +338,7 @@ class Fight(state_machine._State):
     def can_attack(self):
         if not self.active_body:
             return False
-        if not self.ai_turn and not self.can_do_action():
+        if not (self.ai_turn or self.can_do_action()):
             return False
         squares = self.board.get_squares_to_attack(self.active_body)
         return True if squares else False
