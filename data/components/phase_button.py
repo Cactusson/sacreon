@@ -36,8 +36,7 @@ class PhaseButton(pg.sprite.Sprite):
 
     def create_tooltip(self):
         text = [self.name]
-        tooltip = create_tooltip(text, self.rect.topright)
-        return tooltip
+        return create_tooltip(text, self.rect.topright)
 
     def hover(self):
         if self.state == 'IDLE':

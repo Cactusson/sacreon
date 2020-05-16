@@ -10,9 +10,8 @@ class SpellBook:
         for spell in self.spells:
             if spell.level_required > level:
                 spell.block('LEVEL')
-            if mana is not None:
-                if spell.manacost > mana:
-                    spell.block('MANA')
+            if mana is not None and spell.manacost > mana:
+                spell.block('MANA')
         self.image = self.create_image()
         self.rect = self.image.get_rect(center=center)
         self.place_spells()

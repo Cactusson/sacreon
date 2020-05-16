@@ -39,9 +39,12 @@ class Tooltip:
             else:
                 label = Label(line, data.TOOLTIP_FONT_SIZE)
             labels.append(label)
-        width = max([lbl.rect.width for lbl in labels])
-        height = (sum([lbl.rect.height for lbl in labels]) +
-                  (len(labels) - 1) * data.TOOLTIP_GAP)
+        width = max(lbl.rect.width for lbl in labels)
+        height = (
+            sum(lbl.rect.height for lbl in labels)
+            + (len(labels) - 1) * data.TOOLTIP_GAP
+        )
+
         return width, height
 
     def create_image(self, text):

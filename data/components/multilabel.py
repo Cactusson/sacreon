@@ -26,9 +26,8 @@ class MultiLabel:
         labels = [
             Label(text, font_size, font_name=font_name, color=color, bg=bg)
             for text, color in zip(texts, colors)]
-        width = max([label.rect.width for label in labels])
-        height = (sum([label.rect.height for label in labels]) +
-                  gap * len(labels) - 1)
+        width = max(label.rect.width for label in labels)
+        height = sum(label.rect.height for label in labels) + gap * len(labels) - 1
         image = tools.transparent_surface(width, height)
         topleft = [0, 0]
         for label in labels:

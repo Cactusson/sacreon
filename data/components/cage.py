@@ -42,8 +42,5 @@ class Cage:
         if self.victim is None:
             return
         hover = self.rect.collidepoint(pg.mouse.get_pos())
-        if hover:
-            self.image = self.image_hover
-        else:
-            self.image = self.image_idle
+        self.image = self.image_hover if hover else self.image_idle
         self.hover = hover

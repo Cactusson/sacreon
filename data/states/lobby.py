@@ -32,15 +32,13 @@ class Lobby(state_machine._State):
         people = data.HEROES.copy()
         random.shuffle(people)
         names = people[:data.ROSTER_AMOUNT]
-        squad = [Character(name) for name in names]
-        return squad
+        return [Character(name) for name in names]
 
     def create_buttons(self):
         back = Button('BACK', 30, self.button_call, center=(50, 550))
         armory = Button('ARMORY', 30, self.button_call, center=(500, 550))
         go = Button('GO', 30, self.button_call, center=(950, 550))
-        buttons = [back, armory, go]
-        return buttons
+        return [back, armory, go]
 
     def clean_items(self):
         self.persist['armory_items'] = [

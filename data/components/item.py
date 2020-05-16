@@ -27,10 +27,7 @@ class Item:
     def get_info(self, parameter):
         info = data.ITEMS[self.name]
         prototype_info = data.ITEMS[info['prototype']]
-        if parameter in info:
-            obj = info[parameter]
-        else:
-            obj = prototype_info[parameter]
+        obj = info[parameter] if parameter in info else prototype_info[parameter]
         if isinstance(obj, list):
             obj = list(obj)
         return obj
@@ -48,8 +45,7 @@ class Item:
 
     def create_tooltip(self):
         text = [self.name] + self.description
-        tooltip = create_tooltip(text, self.rect.topright)
-        return tooltip
+        return create_tooltip(text, self.rect.topright)
 
     def can_consume(self):
         return True if self.on_consume else False

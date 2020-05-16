@@ -55,11 +55,11 @@ class Sacreon(state_machine._State):
                 self.change_state('CHARACTER_VIEW', character=body.character)
 
     def change_state(self, new_state, **kwargs):
-        if new_state == 'LOBBY':
-            self.persist['squad'] = self.squad
         if new_state == 'CHARACTER_VIEW':
             character = kwargs['character']
             self.persist['character_to_view'] = character
+        elif new_state == 'LOBBY':
+            self.persist['squad'] = self.squad
         self.next = new_state
         self.done = True
 

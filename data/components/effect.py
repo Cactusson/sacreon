@@ -18,10 +18,7 @@ class Effect:
     def get_info(self, parameter):
         info = data.EFFECTS[self.name]
         prototype_info = data.EFFECTS[info['prototype']]
-        if parameter in info:
-            obj = info[parameter]
-        else:
-            obj = prototype_info[parameter]
+        obj = info[parameter] if parameter in info else prototype_info[parameter]
         if isinstance(obj, list):
             obj = list(obj)
         return obj
@@ -43,8 +40,7 @@ class Effect:
     def create_tooltip(self):
         remaining = 'Turns: {}'.format(self.turns_remain)
         text = [self.name, self.description, remaining]
-        tooltip = create_tooltip(text, self.rect.topright)
-        return tooltip
+        return create_tooltip(text, self.rect.topright)
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)

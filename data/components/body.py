@@ -87,8 +87,7 @@ class Body:
         return self.character.xp
 
     def calculate_damage(self):
-        damage = self.attack
-        return damage
+        return self.attack
 
     def crit_proc(self):
         return random.randint(1, 100) <= self.crit_chance
@@ -102,9 +101,12 @@ class Body:
         event = dict(
             name='DAMAGE DEALT', victim=self)
         self.events.append(event)
-        if not self.check_alive() and source.faction == 'GOOD':
-            if source.check_alive():
-                source.get_xp()
+        if (
+            not self.check_alive()
+            and source.faction == 'GOOD'
+            and source.check_alive()
+        ):
+            source.get_xp()
 
     def remove_mana(self, amount):
         self.current_mana -= amount

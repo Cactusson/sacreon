@@ -66,7 +66,7 @@ class Fight(state_machine._State):
                 attack = 'ACTIVE'
             else:
                 attack = 'IDLE' if self.can_attack() else 'BLOCKED'
-            if self.phase == 'SPELLS' or self.phase == 'CASTING':
+            if self.phase in ['SPELLS', 'CASTING']:
                 spells = 'ACTIVE'
             else:
                 spells = 'IDLE' if self.can_cast_spell() else 'BLOCKED'
@@ -183,36 +183,37 @@ class Fight(state_machine._State):
         self.finish_body_turn()
 
     def try_action(self, name):
-        if name == 'MOVE':
-            if self.phase == 'MOVE':
-                self.back_to_nothing()
-            elif self.can_do_action():
-                if self.can_move():
-                    self.back_to_nothing()
-                    self.move()
-        elif name == 'ATTACK':
+        if name == 'ATTACK':
             if self.phase == 'ATTACK':
                 self.back_to_nothing()
             elif self.can_do_action():
                 if self.can_attack():
                     self.back_to_nothing()
                     self.attack()
-        elif name == 'SPELLS':
-            if self.phase == 'SPELLS' or self.phase == 'CASTING':
-                self.back_to_nothing()
-            elif self.can_do_action():
-                if self.can_cast_spell():
-                    self.back_to_nothing()
-                    self.open_spell_book()
+        elif name == 'FINISH TURN':
+            if self.can_do_action():
+                self.finish_body_turn()
+
         elif name == 'ITEMS':
             if self.phase == 'ITEMS':
                 self.back_to_nothing()
             elif self.can_do_action():
                 self.back_to_nothing()
                 self.open_items()
-        elif name == 'FINISH TURN':
-            if self.can_do_action():
-                self.finish_body_turn()
+        elif name == 'MOVE':
+            if self.phase == 'MOVE':
+                self.back_to_nothing()
+            elif self.can_do_action():
+                if self.can_move():
+                    self.back_to_nothing()
+                    self.move()
+        elif name == 'SPELLS':
+            if self.phase in ['SPELLS', 'CASTING']:
+                self.back_to_nothing()
+            elif self.can_do_action():
+                if self.can_cast_spell():
+                    self.back_to_nothing()
+                    self.open_spell_book()
 
     def move_on_square(self, square):
         self.start_animation()
@@ -261,7 +262,7 @@ class Fight(state_machine._State):
             info[body] = {}
             info[body]['health'] = body.current_health
             info[body]['effects'] = body.get_effects()
-        if spell.target == 'GOOD' or spell.target == 'BAD':
+        if spell.target in ['GOOD', 'BAD']:
             target = target.obj
         self.active_body.remove_mana(spell.manacost)
         spell.cast(self.active_body, target, self.bodies, self.board)
@@ -269,7 +270,7 @@ class Fight(state_machine._State):
         self.ui.update_cards()
         if spell.fatigue:
             self.tasks.add(Task(self.after_casting_spell, 1))
-        for body in info.keys():
+        for body in info:
             health_delta = body.current_health - info[body]['health']
             new_effects = [
                 effect for effect in body.get_effects()
@@ -329,23 +330,21 @@ class Fight(state_machine._State):
             return False
         if not self.move_available:
             return False
-        if not self.ai_turn:
-            if not self.can_do_action():
-                return False
+        if not self.ai_turn and not self.can_do_action():
+            return False
         squares = self.board.get_squares_to_move(self.active_body)
         return True if squares else False
 
     def can_attack(self):
         if not self.active_body:
             return False
-        if not self.ai_turn:
-            if not self.can_do_action():
-                return False
+        if not self.ai_turn and not self.can_do_action():
+            return False
         squares = self.board.get_squares_to_attack(self.active_body)
         return True if squares else False
 
     def can_cast_spell(self):
-        if not self.active_body or not self.can_do_action():
+        if not (self.active_body and self.can_do_action()):
             return False
         return True if self.active_body.character.spells else False
 
@@ -376,7 +375,7 @@ class Fight(state_machine._State):
         self.done = True
 
     def check_if_game_finished(self):
-        factions = set([body.faction for body in self.bodies])
+        factions = {body.faction for body in self.bodies}
         return True if len(factions) < 2 else False
 
     def create_flying_labels(self, name, *args):
@@ -418,10 +417,10 @@ class Fight(state_machine._State):
             self.create_labels_at_point(point, damage)
         elif damage and crit and not effects:
             self.create_labels_at_point(point, damage, crit)
-        elif damage and not crit and effects:
+        elif damage and not crit:
             self.create_labels_at_point(point_one, damage)
             self.create_labels_at_point(point_two, *effects)
-        elif damage and crit and effects:
+        elif damage:
             self.create_labels_at_point(point_one, damage, crit)
             self.create_labels_at_point(point_two, *effects)
         elif heal and xp:
@@ -472,10 +471,9 @@ class Fight(state_machine._State):
             if body.rect.collidepoint(pg.mouse.get_pos()):
                 self.ui.new_body_for_card('RIGHT', body)
                 flag = True
-        if not flag:
-            if self.phase in ['ITEMS', 'SPELLS', 'CASTING']:
-                self.back_to_nothing()
-                self.change_phase('TURN')
+        if not flag and self.phase in ['ITEMS', 'SPELLS', 'CASTING']:
+            self.back_to_nothing()
+            self.change_phase('TURN')
 
     def right_click(self):
         for body in self.bodies:
@@ -516,10 +514,7 @@ class Fight(state_machine._State):
                 self.open_spell_book()
             elif event['name'] == 'XP GAINED':
                 body = event['body']
-                if body.xp == 0:
-                    lvl_up = True
-                else:
-                    lvl_up = False
+                lvl_up = True if body.xp == 0 else False
                 self.create_flying_labels('XP', body, lvl_up)
         self.events[:] = []
 

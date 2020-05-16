@@ -146,8 +146,7 @@ class ArmoryView(state_machine._State):
         text = self.active_body.character.level_history
         if not text:
             return None
-        tooltip = create_tooltip(text, self.level_label.rect.topright)
-        return tooltip
+        return create_tooltip(text, self.level_label.rect.topright)
 
     def update_tooltip(self):
         self.tooltip = None
@@ -167,9 +166,11 @@ class ArmoryView(state_machine._State):
 
     def left_click(self):
         for body in self.bodies:
-            if body.rect.collidepoint(pg.mouse.get_pos()):
-                if body != self.active_body:
-                    self.activate_body(body)
+            if (
+                body.rect.collidepoint(pg.mouse.get_pos())
+                and body != self.active_body
+            ):
+                self.activate_body(body)
         item, item_box = self.try_to_get_item()
         if item:
             self.click_on_item(item, item_box)

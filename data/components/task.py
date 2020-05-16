@@ -37,7 +37,7 @@ class Task(pg.sprite.Sprite):
         self._args = args if args else list()
         self._kwargs = kwargs if kwargs else dict()
         self._loops = loops
-        self._chain = list()
+        self._chain = []
 
     def chain(self, *others):
         """Schedule Task(s) to execute when this one is finished
@@ -66,7 +66,7 @@ class Task(pg.sprite.Sprite):
         if self._timer >= self.interval:
             self._timer -= self.interval
             self.callback(*self._args, **self._kwargs)
-            if not self._loops == -1:
+            if self._loops != -1:
                 self._loops -= 1
                 if self._loops <= 0:
                     self._execute_chain()

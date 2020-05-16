@@ -36,11 +36,11 @@ class Reward(state_machine._State):
     def add_items(self, items):
         if not items:
             return
-        for row_num in range(len(self.persist['armory_items'])):
-            for col_num in range(len(self.persist['armory_items'][row_num])):
-                if self.persist['armory_items'][row_num][col_num] is None:
+        for item_ in self.persist['armory_items']:
+            for col_num in range(len(item_)):
+                if item_[col_num] is None:
                     item = items.pop(0)
-                    self.persist['armory_items'][row_num][col_num] = item
+                    item_[col_num] = item
                     if not items:
                         return
 

@@ -38,10 +38,9 @@ class MainMenu(state_machine._State):
         self.start()
 
     def get_event(self, event):
-        if event.type == pg.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                for button in self.buttons:
-                    button.click()
+        if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+            for button in self.buttons:
+                button.click()
 
     def draw(self, surface):
         surface.fill(self.BG_COLOR)

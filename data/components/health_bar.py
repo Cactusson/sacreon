@@ -25,8 +25,7 @@ class HealthBar:
     def create_tooltip(self):
         health = '{}/{}'.format(self.body.current_health, self.body.health)
         text = [health]
-        tooltip = create_tooltip(text, self.rect.topright)
-        return tooltip
+        return create_tooltip(text, self.rect.topright)
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)

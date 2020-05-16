@@ -15,8 +15,7 @@ class Status:
     def create_image(self):
         width = data.BODY_BAR_WIDTH - data.ICON_SIZE
         height = data.BODY_BAR_HEIGHT - data.HEALTH_BAR_HEIGHT
-        image = tools.transparent_surface(width, height)
-        return image
+        return tools.transparent_surface(width, height)
 
     def add_effect(self, effect):
         if effect.name == 'STUN' and 'STUN' in self.get_effects():

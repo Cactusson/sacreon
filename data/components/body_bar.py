@@ -16,9 +16,8 @@ class BodyBar:
         self.turn_icon = None
 
     def create_image(self):
-        image = tools.transparent_surface(
-            data.BODY_BAR_WIDTH, data.BODY_BAR_HEIGHT)
-        return image
+        return tools.transparent_surface(
+                data.BODY_BAR_WIDTH, data.BODY_BAR_HEIGHT)
 
     def shift_rect(self):
         midbottom = (self.body.rect.center[0],

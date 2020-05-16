@@ -63,10 +63,7 @@ class Spell:
     def get_info(self, parameter):
         info = data.SPELLS[self.name]
         prototype_info = data.SPELLS[info['prototype']]
-        if parameter in info:
-            obj = info[parameter]
-        else:
-            obj = prototype_info[parameter]
+        obj = info[parameter] if parameter in info else prototype_info[parameter]
         if isinstance(obj, list):
             obj = list(obj)
         return obj
@@ -81,7 +78,7 @@ class Spell:
             friends = [body for body in bodies if body.faction == 'GOOD']
             for unit in friends:
                 unit.restore_health(self.points)
-        elif self.name == 'Fireball' or self.name == 'Huge Fireball':
+        elif self.name in ['Fireball', 'Huge Fireball']:
             target.get_damage(self.points, caster)
         elif self.name == 'Storm Bolt':
             target.get_damage(self.points, caster)
@@ -121,8 +118,7 @@ class Spell:
 
     def create_tooltip(self):
         text = [self.name] + self.description
-        tooltip = create_tooltip(text, self.rect.topright)
-        return tooltip
+        return create_tooltip(text, self.rect.topright)
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)
@@ -130,7 +126,4 @@ class Spell:
     def update(self):
         self.hover = self.rect.collidepoint(pg.mouse.get_pos())
         if not self.active and not self.blocked:
-            if self.hover:
-                self.image = self.hover_image
-            else:
-                self.image = self.idle_image
+            self.image = self.hover_image if self.hover else self.idle_image

@@ -40,10 +40,7 @@ class Character:
     def get_info(self, parameter):
         info = data.CHARACTERS[self.name]
         prototype_info = data.CHARACTERS[info['prototype']]
-        if parameter in info:
-            obj = info[parameter]
-        else:
-            obj = prototype_info[parameter]
+        obj = info[parameter] if parameter in info else prototype_info[parameter]
         if isinstance(obj, list):
             obj = list(obj)
         return obj

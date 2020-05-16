@@ -16,10 +16,7 @@ class Label(pg.sprite.Sprite):
         else:
             self.font = pg.font.Font(
                 prepare.FONTS['ABeeZee-Regular'], font_size)
-        if color is not None:
-            self.color = color
-        else:
-            self.color = pg.Color('black')
+        self.color = color if color is not None else pg.Color('black')
         self.text = text
         self.image = self.make_image(antialias, bg, width, height)
         if center:

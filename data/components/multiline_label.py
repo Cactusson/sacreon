@@ -15,9 +15,9 @@ class MultilineLabel(pg.sprite.Sprite):
         labels = [Label(line, font_size, center=(0, 0),
                         font_name=font_name, color=color, bg=bg,
                         antialias=antialias) for line in lines]
-        width = max([label.rect.width for label in labels])
+        width = max(label.rect.width for label in labels)
         spacer = vert_space * (len(lines) - 1)
-        height = sum([label.rect.height for label in labels])+spacer
+        height = sum(label.rect.height for label in labels) + spacer
         self.image = pg.Surface((width, height)).convert()
         self.image.set_alpha(0)
         self.image = self.image.convert_alpha()

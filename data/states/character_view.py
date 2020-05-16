@@ -117,10 +117,7 @@ class CharacterView(state_machine._State):
         bonus_health = self.character.health - base_health
         base_mana = self.character.base_mana
         bonus_mana = self.character.mana - base_mana
-        if self.body:
-            attack_value = self.body.attack
-        else:
-            attack_value = self.character.attack
+        attack_value = self.body.attack if self.body else self.character.attack
         attack = '{}'.format(attack_value)
         base_attack = self.character.base_attack
         bonus_attack = attack_value - base_attack
@@ -130,10 +127,7 @@ class CharacterView(state_machine._State):
         speed = '{}'.format(self.character.speed)
         base_speed = self.character.base_speed
         bonus_speed = self.character.speed - base_speed
-        if self.body:
-            crit_value = self.body.crit_chance
-        else:
-            crit_value = self.character.crit_chance
+        crit_value = self.body.crit_chance if self.body else self.character.crit_chance
         crit = '{}%'.format(crit_value)
         base_crit = '{}%'.format(self.character.base_crit_chance)
         bonus_crit = '{}%'.format(crit_value - self.character.base_crit_chance)
@@ -168,8 +162,7 @@ class CharacterView(state_machine._State):
         text = self.character.level_history
         if not text:
             return None
-        tooltip = create_tooltip(text, self.level_label.rect.topright)
-        return tooltip
+        return create_tooltip(text, self.level_label.rect.topright)
 
     def update_tooltip(self):
         self.tooltip = None
@@ -185,9 +178,10 @@ class CharacterView(state_machine._State):
         for label in self.attributes_labels:
             if label.rect.collidepoint(pg.mouse.get_pos()):
                 self.tooltip = label.create_tooltip()
-        if self.level_labels:
-            if self.level_label.rect.collidepoint(pg.mouse.get_pos()):
-                self.tooltip = self.create_tooltip_for_level()
+        if self.level_labels and self.level_label.rect.collidepoint(
+            pg.mouse.get_pos()
+        ):
+            self.tooltip = self.create_tooltip_for_level()
 
     def click(self):
         if not self.rect.collidepoint(pg.mouse.get_pos()):

@@ -62,9 +62,11 @@ class Armory:
         for item_box in self.item_boxes:
             if item_box.item is None:
                 continue
-            if item_box.item.rect.collidepoint(pg.mouse.get_pos()):
-                if item_box is not None:
-                    return item_box.remove_item(), item_box
+            if (
+                item_box.item.rect.collidepoint(pg.mouse.get_pos())
+                and item_box is not None
+            ):
+                return item_box.remove_item(), item_box
         return None, None
 
     def draw(self, surface):

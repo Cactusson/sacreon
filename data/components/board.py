@@ -43,9 +43,8 @@ class Board:
         return grid
 
     def get_all_squares(self, key=lambda x: x):
-        squares = [square for row in self.grid for square in row
-                   if key(square)]
-        return squares
+        return [square for row in self.grid for square in row
+                       if key(square)]
 
     def get_squares_on_side(self, side, amount):
         if side == 'LEFT':
@@ -111,7 +110,7 @@ class Board:
     def get_squares_for_spell(self, obj, spell):
         square = self.get_square_by_obj(obj)
         target = spell.target
-        if target == 'GOOD' or target == 'BAD':
+        if target in ['GOOD', 'BAD']:
             squares = self.get_reachable_squares(
                 square, spell.range, faction=target, ignore=True)
         elif target == 'SQUARE':
@@ -121,8 +120,7 @@ class Board:
 
     def get_all_squares_in_range(self, obj, given_range):
         square = self.get_square_by_obj(obj)
-        squares = self.get_reachable_squares(square, given_range, ignore=True)
-        return squares
+        return self.get_reachable_squares(square, given_range, ignore=True)
 
     def get_targets_for_ai(self, obj):
         targets = []
@@ -159,10 +157,7 @@ class Board:
         while steps:
             steps -= 1
             squares_to_add = []
-            if ignore:
-                squares = to_check
-            else:
-                squares = accepted
+            squares = to_check if ignore else accepted
             for sq in [s for s in squares if s not in checked]:
                 checked.append(sq)
                 neighbors = self.get_neighbors(sq)
@@ -278,7 +273,7 @@ class Board:
             square.draw(surface)
 
     def update(self, dt, phase, active_body):
-        if phase == 'MOVE' or phase == 'ATTACK' or phase == 'CASTING':
+        if phase in ['MOVE', 'ATTACK', 'CASTING']:
             for square in self.squares:
                 square.update()
         self.hoop.rect.center = active_body.rect.center
